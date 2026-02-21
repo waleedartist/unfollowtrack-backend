@@ -22,6 +22,23 @@ app.get('/', (req, res) => {
     res.send('UnfollowTrack API is running...');
 });
 
+// Temporary debug endpoint - REMOVE AFTER TESTING
+app.get('/debug', (req, res) => {
+    const clientId = process.env.INSTAGRAM_CLIENT_ID || 'NOT SET';
+    const clientSecret = process.env.INSTAGRAM_CLIENT_SECRET || 'NOT SET';
+    const redirectUri = process.env.INSTAGRAM_REDIRECT_URI || 'NOT SET';
+    const mongoUri = process.env.MONGO_URI || 'NOT SET';
+
+    res.json({
+        INSTAGRAM_CLIENT_ID: clientId ? `${clientId.substring(0, 4)}...${clientId.substring(clientId.length - 4)}` : 'NOT SET',
+        INSTAGRAM_CLIENT_SECRET: clientSecret ? `${clientSecret.substring(0, 4)}...${clientSecret.substring(clientSecret.length - 4)} (length: ${clientSecret.length})` : 'NOT SET',
+        INSTAGRAM_REDIRECT_URI: redirectUri,
+        MONGO_URI: mongoUri ? `${mongoUri.substring(0, 20)}...` : 'NOT SET',
+        NODE_ENV: process.env.NODE_ENV || 'not set',
+        PORT: process.env.PORT || 'not set',
+    });
+});
+
 // Connect to Database
 const connectDB = async () => {
     try {
