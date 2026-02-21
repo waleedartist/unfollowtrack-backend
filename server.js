@@ -28,14 +28,16 @@ app.get('/', (req, res) => {
 const DEPLOY_TIME = new Date().toISOString();
 app.get('/debug', (req, res) => {
     const clientId = process.env.INSTAGRAM_CLIENT_ID || 'NOT SET';
-    const clientSecret = process.env.INSTAGRAM_CLIENT_SECRET || 'NOT SET';
+    // Use FB_APP_SECRET if available, fallback to INSTAGRAM_CLIENT_SECRET
+    const clientSecret = process.env.FB_APP_SECRET || process.env.INSTAGRAM_CLIENT_SECRET || 'NOT SET';
     const redirectUri = process.env.INSTAGRAM_REDIRECT_URI || 'NOT SET';
     const mongoUri = process.env.MONGO_URI || 'NOT SET';
 
     res.json({
         DEPLOY_TIME: DEPLOY_TIME,
         INSTAGRAM_CLIENT_ID: clientId ? `${clientId.substring(0, 4)}...${clientId.substring(clientId.length - 4)}` : 'NOT SET',
-        INSTAGRAM_CLIENT_SECRET: clientSecret ? `${clientSecret.substring(0, 4)}...${clientSecret.substring(clientSecret.length - 4)} (length: ${clientSecret.length})` : 'NOT SET',
+        ACTUAL_SECRET_USED: clientSecret ? `${clientSecret.substring(0, 4)}...${clientSecret.substring(clientSecret.length - 4)} (length: ${clientSecret.length})` : 'NOT SET',
+        SECRET_SOURCE: process.env.FB_APP_SECRET ? 'FB_APP_SECRET' : 'INSTAGRAM_CLIENT_SECRET',
         INSTAGRAM_REDIRECT_URI: redirectUri,
         MONGO_URI: mongoUri ? `${mongoUri.substring(0, 20)}...` : 'NOT SET',
         NODE_ENV: process.env.NODE_ENV || 'not set',

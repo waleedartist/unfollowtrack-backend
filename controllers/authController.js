@@ -2,6 +2,9 @@ const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+// Helper: Get app secret from either new or old variable name
+const getAppSecret = () => process.env.FB_APP_SECRET || process.env.INSTAGRAM_CLIENT_SECRET;
+
 exports.instagramLoginRedirect = (req, res) => {
     // Use Facebook OAuth for Instagram Graph API (Business accounts)
     const authUrl = `https://www.facebook.com/v21.0/dialog/oauth?client_id=${process.env.INSTAGRAM_CLIENT_ID}&redirect_uri=${process.env.INSTAGRAM_REDIRECT_URI}&scope=instagram_basic,instagram_manage_insights,pages_show_list,pages_read_engagement&response_type=code`;
@@ -100,7 +103,7 @@ exports.instagramCallback = async (req, res) => {
             `https://graph.facebook.com/v21.0/oauth/access_token`, {
             params: {
                 client_id: process.env.INSTAGRAM_CLIENT_ID,
-                client_secret: process.env.INSTAGRAM_CLIENT_SECRET,
+                client_secret: getAppSecret(),
                 redirect_uri: process.env.INSTAGRAM_REDIRECT_URI,
                 code,
             }
