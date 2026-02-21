@@ -4,8 +4,10 @@ const morgan = require('morgan');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 
-// Load env vars
-dotenv.config();
+// Only load .env file in development (Railway provides env vars natively)
+if (process.env.NODE_ENV !== 'production') {
+    dotenv.config();
+}
 
 const app = express();
 
@@ -23,6 +25,7 @@ app.get('/', (req, res) => {
 });
 
 // Temporary debug endpoint - REMOVE AFTER TESTING
+const DEPLOY_TIME = new Date().toISOString();
 app.get('/debug', (req, res) => {
     const clientId = process.env.INSTAGRAM_CLIENT_ID || 'NOT SET';
     const clientSecret = process.env.INSTAGRAM_CLIENT_SECRET || 'NOT SET';
@@ -30,6 +33,7 @@ app.get('/debug', (req, res) => {
     const mongoUri = process.env.MONGO_URI || 'NOT SET';
 
     res.json({
+        DEPLOY_TIME: DEPLOY_TIME,
         INSTAGRAM_CLIENT_ID: clientId ? `${clientId.substring(0, 4)}...${clientId.substring(clientId.length - 4)}` : 'NOT SET',
         INSTAGRAM_CLIENT_SECRET: clientSecret ? `${clientSecret.substring(0, 4)}...${clientSecret.substring(clientSecret.length - 4)} (length: ${clientSecret.length})` : 'NOT SET',
         INSTAGRAM_REDIRECT_URI: redirectUri,
