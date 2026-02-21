@@ -19,7 +19,7 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/analytics', require('./routes/analyticsRoutes'));
 
 app.get('/', (req, res) => {
-    res.send('UnfollowTrack API is running...');
+    res.send('UnfollowTrack API is running... v2');
 });
 
 // Temporary debug endpoint - REMOVE AFTER TESTING
